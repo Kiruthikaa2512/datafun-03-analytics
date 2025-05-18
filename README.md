@@ -13,9 +13,7 @@ This project focuses on reading, processing, and writing different types of data
 ```bash
 python --version
 ````
-
 ---
-
 ##  Project Initialization & GitHub Setup
 
 ### Step 2: Create and Clone GitHub Repo
