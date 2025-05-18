@@ -89,6 +89,7 @@
 # When you identify a new package you want to use, 
 # Just update the list below and re-run the install command. 
 
+
 # ======================================================
 # STEP D: VS CODE - Select Interpreter 
 # ======================================================
@@ -150,6 +151,10 @@ loguru
 # Environment variables management
 # python-dotenv
 
+# ======================================================
+# NETWORKING / HTTP
+# ======================================================
+requests 
 # ======================================================
 # TEXT-TO-SPEECH
 # ======================================================
