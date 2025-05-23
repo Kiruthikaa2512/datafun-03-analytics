@@ -20,7 +20,7 @@ from utils_logger import logger
 # Declare Global Variables
 #####################################
 
-# TODO: Replace with the names of your folders
+
 FETCHED_DATA_DIR: str = "raw_data"
 PROCESSED_DIR: str = "processed_data"
 
@@ -41,16 +41,15 @@ def count_word_occurrences(file_path: pathlib.Path, word: str) -> int:
 def process_text_file():
     """Read a text file, count occurrences of 'GREGORY', and save the result."""
  
-    # TODO: Replace with path to your text data file
     input_file = pathlib.Path(FETCHED_DATA_DIR, "Romeo_and_Juliet_Play.txt")
 
-    # TODO: Replace with path to your text processed file
+  
     output_file = pathlib.Path(PROCESSED_DIR, "Text_Gregory_Word_Count.txt")
 
-    # TODO: Replace with the word you want to count from your text file
+   
     word_to_count: str = "GREGORY"
 
-    # TODO: Make any necessary changes to the logic
+   
     # Updated logic: Prevents errors by checking if the file exists first
     # If the file is missing, returns 0 instead of causing a failure
     word_count: int = count_word_occurrences(input_file, word_to_count) if input_file.exists() else 0
@@ -60,7 +59,7 @@ def process_text_file():
 
     # Write the results to the output file
     with output_file.open('w') as file:
-        # TODO: Update the output to describe your results
+    
         file.write(f"Occurrences of '{word_to_count}'appears {word_count} times in the text.\n")
     
     # Log the processing of the TEXT file
