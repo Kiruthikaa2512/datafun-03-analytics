@@ -1,0 +1,7 @@
+Occurrences of 'doc' in column B: 11
+Analysis Report for 'Feedback.xlsx'
+========================================
+Word counted: 'doc'
+Column analyzed: B
+Total occurrences found: 11
+========================================

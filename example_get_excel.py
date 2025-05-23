@@ -13,11 +13,10 @@ in the same folder as this file.
 # Import from Python Standard Library
 import pathlib
 import sys
-import utils_logger
-print("Logger file path:", utils_logger.get_log_file_path())
 
 # Import from external packages
 import requests
+import pandas as pd
 
 # Ensure project root is in sys.path for local imports
 sys.path.append(str(pathlib.Path(__file__).resolve().parent))
@@ -43,12 +42,6 @@ def fetch_excel_file(folder_name: str, filename: str, url: str) -> None:
         folder_name (str): Name of the folder to save the file.
         filename (str): Name of the output file.
         url (str): URL of the Excel file to fetch.
-
-    Returns:
-        None
-
-    Example:
-        fetch_excel_file("data", "data.xlsx", "https://example.com/data.xlsx")
     """
     if not url:
         logger.error("The URL provided is empty. Please provide a valid URL.")
@@ -57,9 +50,18 @@ def fetch_excel_file(folder_name: str, filename: str, url: str) -> None:
     try:
         logger.info(f"Fetching Excel data from {url}...")
         response = requests.get(url)
-        response.raise_for_status()
-        write_excel_file(folder_name, filename, response.content)
-        logger.info(f"SUCCESS: Excel file fetched and saved as {filename}")
+
+        # FIXED: Allow both valid Excel MIME type and GitHub's octet-stream
+        content_type = response.headers.get("Content-Type", "")
+        if response.status_code == 200 and (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" in content_type
+            or "application/octet-stream" in content_type
+        ):
+            logger.info("Download successful. Content appears to be an Excel file.")
+            write_excel_file(folder_name, filename, response.content)
+            logger.info(f"SUCCESS: Excel file fetched and saved as {filename}")
+        else:
+            logger.error(f"Download failed or unsupported file type. Status: {response.status_code}, Content-Type: {content_type}")
     except requests.exceptions.HTTPError as http_err:
         logger.error(f"HTTP error occurred: {http_err}")
     except requests.exceptions.RequestException as req_err:
@@ -73,9 +75,6 @@ def write_excel_file(folder_name: str, filename: str, binary_data: bytes) -> Non
         folder_name (str): Name of the folder to save the file.
         filename (str): Name of the output file.
         binary_data (bytes): Binary content of the Excel file.
-
-    Returns:
-        None
     """
     file_path = pathlib.Path(folder_name).joinpath(filename)
     try:
@@ -93,11 +92,21 @@ def write_excel_file(folder_name: str, filename: str, binary_data: bytes) -> Non
 
 def main():
     """
-    Main function to demonstrate fetching Excel data.
+    Main function to demonstrate fetching and reading Excel data.
     """
     excel_url = 'https://raw.githubusercontent.com/denisecase/datafun-03-analytics/main/hosted/Feedback.xlsx'
+    excel_path = pathlib.Path(FETCHED_DATA_DIR, "Feedback.xlsx")
+
     logger.info("Starting Excel fetch demonstration...")
     fetch_excel_file(FETCHED_DATA_DIR, "Feedback.xlsx", excel_url)
+
+    # ✅ Now try to read it using pandas after download is complete
+    try:
+        df = pd.read_excel(excel_path)
+        print("\nExcel Data Preview:\n")
+        print(df.head())
+    except Exception as e:
+        logger.error(f"Failed to read Excel file with pandas: {e}")
 
 #####################################
 # Conditional Execution
